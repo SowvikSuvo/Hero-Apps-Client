@@ -32,7 +32,7 @@ const ReviewChart = ({ ratings = [] }) => {
           <YAxis dataKey="name" type="category" scale="band" />
           <Tooltip />
           <Legend />
-          <Bar dataKey="count" barSize={20} fill="#00d390" />
+          <Bar dataKey="count" barSize={20} fill="#fc7f03" />
         </ComposedChart>
       </ResponsiveContainer>
     </div>

@@ -1,10 +1,29 @@
 import { DiVisualstudio } from "react-icons/di";
 import AppCard from "../ui/AppCard";
 
-import { useLoaderData } from "react-router";
+// import { useLoaderData } from "react-router";
+import { useEffect, useState } from "react";
 
 const AllAppsPage = () => {
-  const apps = useLoaderData();
+  const [apps, setApps] = useState([]);
+  const [totalApps, setTotalApps] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const limit = 10;
+
+  useEffect(() => {
+    fetch(
+      `http://localhost:5000/apps?limit=${limit}&skip=${currentPage * limit}`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setApps(data.apps);
+        setTotalApps(data.total);
+        const page = Math.ceil(data.total / limit);
+        setTotalPage(page);
+      });
+  }, [currentPage]);
+  console.log(currentPage);
   return (
     <div>
       <title>All Apps | Hero Apps</title>
@@ -22,7 +41,7 @@ const AllAppsPage = () => {
       <div className="w-11/12 mx-auto flex flex-col-reverse lg:flex-row gap-5 items-start justify-between lg:items-end mt-10">
         <div>
           <h2 className="text-lg underline font-bold">
-            ({apps.length}) Apps Found
+            ({totalApps}) Apps Found
           </h2>
         </div>
 
@@ -78,6 +97,14 @@ const AllAppsPage = () => {
           )}
         </div>
       </>
+      <div className=" flex justify-center flex-wrap gap-3 py-10">
+        {/* 0,1,2,3,4,5,6,7,8,9 */}
+        {[...Array(totalPage).keys()].map((i) => (
+          <button onClick={() => setCurrentPage(i)} className="btn">
+            {i}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
